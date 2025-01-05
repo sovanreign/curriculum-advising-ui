@@ -87,11 +87,15 @@ export function Coaches() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      setSelectedCoach(response.data);
+      const coachData = response.data;
+
+      // Set the selected coach and open the modal
+      setSelectedCoach(coachData);
       setIsViewModalOpen(true);
 
-      for (const [key, value] of Object.entries(response.data)) {
-        setValue(key, value);
+      // Populate form fields with coach data
+      for (const [key, value] of Object.entries(coachData)) {
+        setValue(key, value); // Use React Hook Form's setValue
       }
     } catch (error) {
       console.error("Error fetching coach details:", error);
@@ -204,6 +208,135 @@ export function Coaches() {
           </div>
         </div>
       </div>
+
+      {isViewModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Coach Information</h3>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="mt-4 grid grid-cols-2 gap-4"
+            >
+              <div>
+                <label className="block text-sm">First Name</label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
+                />
+                {errors.firstName && (
+                  <span className="text-red-500 text-sm">
+                    {errors.firstName.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm">Last Name</label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
+                />
+                {errors.lastName && (
+                  <span className="text-red-500 text-sm">
+                    {errors.lastName.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm">Coach ID</label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  {...register("coachId", { required: "Coach ID is required" })}
+                />
+                {errors.coachId && (
+                  <span className="text-red-500 text-sm">
+                    {errors.coachId.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm">Username</label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  {...register("username", {
+                    required: "Username is required",
+                  })}
+                />
+                {errors.username && (
+                  <span className="text-red-500 text-sm">
+                    {errors.username.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm">Course</label>
+                <select
+                  className="select select-bordered w-full"
+                  {...register("programId", { required: "Course is required" })}
+                >
+                  <option value="">Select Course</option>
+                  {programs.map((prog) => (
+                    <option key={prog.id} value={prog.id}>
+                      {prog.code}
+                    </option>
+                  ))}
+                </select>
+                {errors.programId && (
+                  <span className="text-red-500 text-sm">
+                    {errors.programId.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm">Email Address</label>
+                <input
+                  type="email"
+                  className="input input-bordered w-full"
+                  {...register("email", { required: "Email is required" })}
+                />
+                {errors.email && (
+                  <span className="text-red-500 text-sm">
+                    {errors.email.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm">Address</label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  {...register("address", { required: "Address is required" })}
+                />
+                {errors.address && (
+                  <span className="text-red-500 text-sm">
+                    {errors.address.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="modal-action col-span-2 flex justify-between">
+                <button type="submit" className="btn btn-primary">
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => setIsViewModalOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="modal modal-open">
